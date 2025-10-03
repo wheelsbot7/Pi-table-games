@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgx08ipxtg2od"]
+
+[ext_resource type="Script" uid="uid://2jvdumklbppl" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bv840mg5mtqqq" path="res://ball.tscn" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://dg1yeg3htrdw1" path="res://UI.tscn" id="2_h2yge"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+ball_scene = ExtResource("2_1bvp3")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Control" parent="." instance=ExtResource("2_h2yge")]
+
+[node name="Score" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Score: "
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="start_game" from="Control" to="." method="_on_control_start_game"]
