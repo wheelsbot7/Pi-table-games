@@ -42,7 +42,7 @@ class HandTrackingGame:
         # Game state
         self.score = 0
         self.targets: List[dict] = []
-        self.game_time = 60  # 60 seconds game duration
+        self.game_time = 60  # seconds
         self.start_time = pygame.time.get_ticks()
         self.game_active = True
         self.spawn_timer = 0
@@ -194,20 +194,22 @@ class HandTrackingGame:
             current_time = pygame.time.get_ticks()
 
             # Spawn new targets periodically
-            self.spawn_timer += self.clock.get_time()
-            if (
-                self.spawn_timer >= 2000 and len(self.targets) < 5
-            ):  # Spawn every 2 seconds, max 5 targets
-                self.spawn_target()
-                self.spawn_timer = 0
+            if self.game_active:
+                self.spawn_timer += self.clock.get_time()
+                if (
+                    self.spawn_timer >= 2000 and len(self.targets) < 5
+                ):  # Spawn every 2 seconds, max 5 targets
+                    self.spawn_target()
+                    self.spawn_timer = 0
 
             # Update targets
             self.update_targets(hand_pos)
 
-            # Check game over condition
+            # Check game over condition, set final score if game is over
             elapsed_time = (current_time - self.start_time) // 1000
             if elapsed_time >= self.game_time and self.game_active:
                 self.game_active = False
+                self.final_score = self.score
 
             # Draw everything
             self.screen.fill(self.colors["background"])
@@ -261,7 +263,7 @@ class HandTrackingGame:
 
                 game_over_text = self.font.render("GAME OVER!", True, (255, 255, 255))
                 final_score_text = self.font.render(
-                    f"Final Score: {self.score}", True, (255, 255, 255)
+                    f"Final Score: {self.final_score}", True, (255, 255, 255)
                 )
                 restart_text = self.small_font.render(
                     "Press 'R' to restart", True, (255, 255, 255)
