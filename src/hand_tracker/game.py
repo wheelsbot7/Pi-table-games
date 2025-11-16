@@ -1,9 +1,11 @@
-import pygame
-import cv2
-import numpy as np
 import random
 import sys
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
+
+import cv2
+import numpy as np
+import pygame
+
 from .tracker import HandTracker
 
 
