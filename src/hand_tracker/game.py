@@ -180,8 +180,10 @@ class HandTrackingGame:
             # Process frame with hand tracker
             hand_data = self.tracker.get_hand_data(frame)
 
+            processed_frame = self.tracker.process_frame(frame)
+
             # Convert camera frame to Pygame surface
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
             frame_rgb = np.rot90(frame_rgb)  # Rotate to correct orientation
             camera_surface = pygame.surfarray.make_surface(frame_rgb)
 

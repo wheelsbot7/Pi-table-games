@@ -28,6 +28,10 @@ class HandTracker:
             min_tracking_confidence: Minimum confidence value for hand tracking.
         """
 
+        # Pyright says these aren't known attributes of of the mediapipe module, but
+        # this code is copied directly from Google's mediapipe documentation, so
+        # just ignore it unless you know why this is happening.
+
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
