@@ -180,6 +180,7 @@ class HandTrackingGame:
             # Process frame with hand tracker
             hand_data = self.tracker.get_hand_data(frame)
 
+            # Add tracking overlay
             processed_frame = self.tracker.process_frame(frame)
 
             # Convert camera frame to Pygame surface
