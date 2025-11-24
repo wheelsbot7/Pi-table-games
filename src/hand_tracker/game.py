@@ -12,12 +12,13 @@ from .tracker import HandTracker
 class HandTrackingGame:
     """A game where players use hand tracking to catch targets."""
 
-    def __init__(self, width: int = 800, height: int = 600):
+    def __init__(self, width: int = 1920, height: int = 1080):
         """Initialize the game."""
         self.width = width
         self.height = height
         self.camera_width = 640
         self.camera_height = 480
+        self.frame_count = 0
 
         # Initialize Pygame
         pygame.init()
@@ -44,7 +45,7 @@ class HandTrackingGame:
         # Game state
         self.score = 0
         self.targets: List[dict] = []
-        self.game_time = 60  # seconds
+        self.game_time = 10  # seconds
         self.start_time = pygame.time.get_ticks()
         self.game_active = True
         self.spawn_timer = 0
@@ -206,6 +207,7 @@ class HandTrackingGame:
                 ):  # Spawn every 2 seconds, max 5 targets
                     self.spawn_target()
                     self.spawn_timer = 0
+                self.frame_count += 1
 
             # Update targets
             self.update_targets(hand_pos)
@@ -306,11 +308,13 @@ class HandTrackingGame:
         self.start_time = pygame.time.get_ticks()
         self.game_active = True
         self.spawn_timer = 0
+        self.frame_count = 0
 
     def cleanup(self):
         """Clean up resources."""
         self.tracker.close()
         self.cap.release()
+        print(self.frame_count)
         pygame.quit()
         print("Game closed.")
 
