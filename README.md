@@ -10,3 +10,8 @@ To start the game, cd into Pi-table-games and run the following commands to sync
 uv sync
 uv run hand-game
 ```
+
+For demonstrating hand-tracking on its own, instead run the following
+```bash
+uv run hand-tracker
+```
