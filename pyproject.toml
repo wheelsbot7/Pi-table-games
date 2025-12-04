@@ -18,3 +18,4 @@ build-backend = "hatchling.build"
 [project.scripts]
 hand-tracker = "hand_tracker.tracker:main"
 hand-game = "hand_tracker.game:main"
+mouse-game = "hand_tracker.game:main_mouse"

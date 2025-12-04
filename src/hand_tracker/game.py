@@ -38,9 +38,9 @@ class HandTrackingGame:
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.camera_width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.camera_height)
 
-        if not self.cap.isOpened():
-            print("Error: Could not open camera")
-            sys.exit(1)
+        # if not self.cap.isOpened():
+        #     print("Error: Could not open camera")
+        #     sys.exit(1)
 
         # Game state
         self.score = 0
@@ -153,7 +153,7 @@ class HandTrackingGame:
 
         return screen_x, screen_y
 
-    def run(self):
+    def run(self, mouse_enabled):
         """Run the main game loop."""
         print("Starting Hand Tracking Game!")
         print("Cover the red circles with your hand to score points!")
@@ -172,29 +172,33 @@ class HandTrackingGame:
                     elif event.key == pygame.K_r:
                         self.restart_game()
 
-            # Read camera frame
-            ret, frame = self.cap.read()
-            if not ret:
-                print("Error: Could not read camera frame")
-                break
+            if not mouse_enabled:
+                # Read camera frame
+                ret, frame = self.cap.read()
+                if not ret:
+                    print("Error: Could not read camera frame")
+                    break
+                # Process frame with hand tracker
+                hand_data = self.tracker.get_hand_data(frame)
 
-            # Process frame with hand tracker
-            hand_data = self.tracker.get_hand_data(frame)
+                # Add tracking overlay
+                processed_frame = self.tracker.process_frame(frame)
 
-            # Add tracking overlay
-            processed_frame = self.tracker.process_frame(frame)
+                # Convert camera frame to Pygame surface
+                frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
+                frame_rgb = np.rot90(frame_rgb)  # Rotate to correct orientation
+                camera_surface = pygame.surfarray.make_surface(frame_rgb)
 
-            # Convert camera frame to Pygame surface
-            frame_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
-            frame_rgb = np.rot90(frame_rgb)  # Rotate to correct orientation
-            camera_surface = pygame.surfarray.make_surface(frame_rgb)
-
-            # Get hand position for game logic
-            hand_pos = None
-            if hand_data:
-                # Use the first detected hand's palm center
-                palm_x, palm_y = hand_data[0]["palm_center"]
-                hand_pos = self.convert_camera_to_screen(palm_x, palm_y)
+                # Get hand position for game logic
+                hand_pos = None
+                if hand_data:
+                    # Use the first detected hand's palm center
+                    palm_x, palm_y = hand_data[0]["palm_center"]
+                    hand_pos = self.convert_camera_to_screen(palm_x, palm_y)
+            else:
+                camera_surface = pygame.Surface([640, 480], pygame.SRCALPHA, 32)
+                camera_surface = camera_surface.convert_alpha()
+                hand_pos = pygame.mouse.get_pos()
 
             # Update game state
             current_time = pygame.time.get_ticks()
@@ -260,7 +264,8 @@ class HandTrackingGame:
 
             # Draw UI
             self.draw_ui()
-            self.draw_camera_feed(camera_surface)
+            if not mouse_enabled:
+                self.draw_camera_feed(camera_surface)
 
             # Draw game over screen
             if not self.game_active:
@@ -321,9 +326,19 @@ class HandTrackingGame:
 
 def main():
     """Main function to run the hand tracking game."""
+    mouse_enabled = False
     game = HandTrackingGame()
-    game.run()
+    game.run(mouse_enabled)
+
+
+def main_mouse():
+    mouse_enabled = True
+    game = HandTrackingGame()
+    game.run(mouse_enabled)
 
 
 if __name__ == "__main__":
+    main()
+
+if __name__ == "__main_mouse__":
     main()
