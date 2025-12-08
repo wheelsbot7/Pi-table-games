@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import cv2
 import mediapipe as mp
@@ -21,7 +21,7 @@ class HandTracker:
 
         Args:
             static_image_mode: Whether to treat the input images as a batch of static
-                and possibly unrelated images, or a video stream.
+            and possibly unrelated images, or a video stream.
             max_num_hands: Maximum number of hands to detect.
             model_complexity: Complexity of the hand landmark model (0, 1, or 2).
             min_detection_confidence: Minimum confidence value for hand detection.
